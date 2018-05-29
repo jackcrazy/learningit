@@ -28,41 +28,48 @@ void Infix_to_suffix(char *str){
 			case ')': Pop(&S1,&ch);while(!EmptyStack(S1) && ch!='('){
 				*q=ch;
 				q++;
-				Pop(&S1,&ch);break;
+				Pop(&S1,&ch);
 			}
+			break;
 			case ']': Pop(&S1,&ch);while(!EmptyStack(S1) && ch!='['){
 				*q=ch;
 				q++;
-				Pop(&S1,&ch);break;
+				Pop(&S1,&ch);
 			}
+			break;
 			case '}': Pop(&S1,&ch);while(!EmptyStack(S1) && ch!='{'){
 				*q=ch;
 				q++;
-				Pop(&S1,&ch);break;
+				Pop(&S1,&ch);
 			}
+			break;
 		}
 
 	}
 	else {
 		GetStack(S1,&ch);
-		switch(ch){
-			case '-':
-			case '+': 
-			    if(*p=='*' || *p=='/')
-				Push(&S1,*p);
-				else {
-					Pop(&S1,&ch);
-					*q=ch;
-					q++;
-					p--;
-				}
-				break;
+		switch(*p){
 			case '*':
 			case '/':
+			    if(ch!='*' || ch!='/') 
+				Push(&S1,*p);
+			    else {
+			    	Pop(&S1,&ch);
+			    	*q=ch;
+			    	q++;
+			    	p--;
+			    }
+				break;
+			case '-':
+			case '+':
+			    if(ch=='(' || ch=='{' || ch=='[')
+			    Push(&S1,*p);
+			    else {
 			    Pop(&S1,&ch);
 			    *q=ch;
 			    q++;
                 p--;
+			    }
                 break;
 		}
 	}
@@ -73,13 +80,14 @@ void Infix_to_suffix(char *str){
     	*q=ch;
     	q++;
     }
+    *q='\0';
 }
 
 int main(){
 	char *p;
 	p=(char *)malloc(50*sizeof(char));
-	gets(p);
+	scanf("%s",p);
 	Infix_to_suffix(p);
-	printf("%s",*p);
+	printf("%s",p);
 	return 0;
 }
