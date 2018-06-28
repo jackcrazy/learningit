@@ -12,32 +12,36 @@ typedef struct S1
 
 void Sort(int wdata[],int n){  //weight data sort
 	int i,j;
-	int min,k;
+	int min=0,k=0;
 	for(i=0;i<n;i++){
-		min=wdata[i];
+		min=wdata[i];k=i;
 		for(j=i+1;j<n;j++)
 			if(min>wdata[j]){
 				min=wdata[j];
 				k=j;
 			}
-		min=wdata[i];
-		wdata[i]=wdata[k];
-		wdata[k]=min;
+		wdata[k]=wdata[i];
+		wdata[i]=min;
 	}
 }
 
 WN CreaHfmanTree(int wdata[],int n){    
-	VN *T1,*T2,*T,*Tail,*p,*pre;
+	WN T1,T2,T,Tail,p,pre;
 	int i,j;
 	int Node1,Node2;
-	Tail=(VN)malloc(sizeof(VNode));
+	Tail=(WN)malloc(sizeof(WNode));
 	Tail->next=0;
 	while(1){
 		Sort(wdata,n);  //sort
+		/*
+		for(j=0;j<n;j++)
+			printf("%d ",wdata[j]);
+		printf("\n");
+		*/
 		i=0;
 		T1=0;
 		T2=0;
-		while(wdata[i]!=-1 && i<n) i++;  //weight data find the 2 minest data
+		while(wdata[i]==-1 && i<n) i++;  //weight data find the 2 minest data
 		if(i==n-1) return Tail->next;
         Node1=i;
         Node2=i+1;
@@ -53,13 +57,13 @@ WN CreaHfmanTree(int wdata[],int n){
         		T2=p;
         	}
         	pre=p;
-        	p=p->lchild;
+        	p=p->next;
         }
         if(T1==0)
-        T1=(VN)malloc(sizeof(VNode));T1->info=wdata[Node1];T1->next=0;
+        T1=(WN)malloc(sizeof(WNode));T1->info=wdata[Node1];T1->next=0;
         if(T2==0)
-        T2=(VN)malloc(sizeof(VNode));T2->info=wdata[Node2];T2->next=0;
-        T=(VN)malloc(sizeof(VNode));T->next=0;
+        T2=(WN)malloc(sizeof(WNode));T2->info=wdata[Node2];T2->next=0;
+        T=(WN)malloc(sizeof(WNode));T->next=0;
         T->lchild=T1;
         T->rchild=T2;
         T->info=T1->info+T2->info;
@@ -76,9 +80,26 @@ WN CreaHfmanTree(int wdata[],int n){
 
 }
 
+
+void FirstOrder(WN T){
+	if(T){
+		printf("%d ",T->info);
+		FirstOrder(T->lchild);
+		FirstOrder(T->rchild);
+	}
+} 
+
+void InOrder(WN T){
+	if(T){
+		InOrder(T->lchild);
+		printf("%d ",T->info);
+		InOrder(T->rchild);
+	}
+} 
+
 int main(){
 
-    WN *T;   //Tree first node
+    WN T;   //Tree first node
     int n;  //weight
     int wdata[Max];
     int i;
@@ -86,6 +107,18 @@ int main(){
     for(i=0;i<n;i++)
     	scanf("%d",&wdata[i]);
     T=CreaHfmanTree(wdata,n);
-
+    printf("give the first Order\n");
+    FirstOrder(T);
+    printf("\n");
+    printf("give the InOrder\n");
+    InOrder(T);
+    printf("\n");
+    /*
+    Sort(wdata,n);
+   
+    for(i=0;i<n;i++)
+			printf("%d ",wdata[i]);
+		printf("\n");
+    */
 	return 0;
 }
